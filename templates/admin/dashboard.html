@@ -1,0 +1,354 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin | ZO Gospel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { DEFAULT: '#D4AF37', light: '#F4DF4E', dark: '#AF8F2C' },
+                        spiritual: { violet: '#8A2BE2', dark: '#4B0082' },
+                        luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+                    },
+                    fontFamily: {
+                        headers: ['Montserrat', 'sans-serif'],
+                        body: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-nav { background: rgba(26, 26, 26, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="bg-luxury-offwhite font-body text-luxury-black">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 left-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'accueil' %}">
+                    <img src="{% static 'images/logo_zogospel.png' %}" alt="ZO Gospel" class="h-12 w-auto">
+                </a>
+                <span class="text-white/50 font-headers text-sm">Admin Dashboard</span>
+            </div>
+
+            <nav class="flex items-center space-x-4">
+                <a href="{% url 'accueil' %}" target="_blank" class="text-sm text-white/70 hover:text-gold transition-colors">Voir le site</a>
+                <a href="{% url 'admin_logout' %}" class="bg-spiritual-violet px-5 py-2 text-luxury-white text-xs font-bold uppercase tracking-tighter rounded-full hover:bg-spiritual-dark transition-all">Déconnexion</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <h1 class="text-3xl font-headers font-bold mb-8">Tableau de bord</h1>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-gold flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Musiques</p>
+                    <h3 class="font-headers font-bold text-3xl text-luxury-black">{{ musique_count }}</h3>
+                </div>
+                <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-spiritual-violet flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Actualités</p>
+                    <h3 class="font-headers font-bold text-3xl text-luxury-black">{{ article_count }}</h3>
+                </div>
+                <div class="w-12 h-12 bg-spiritual-violet/10 rounded-full flex items-center justify-center text-spiritual-violet group-hover:bg-spiritual-violet group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-gold flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Magazines</p>
+                    <h3 class="font-headers font-bold text-3xl text-luxury-black">{{ magazines.count }}</h3>
+                </div>
+                <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-spiritual-violet flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Événements</p>
+                    <h3 class="font-headers font-bold text-3xl text-luxury-black">{{ agendas.count }}</h3>
+                </div>
+                <div class="w-12 h-12 bg-spiritual-violet/10 rounded-full flex items-center justify-center text-spiritual-violet group-hover:bg-spiritual-violet group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-gold flex items-center justify-between group hover:shadow-md transition-all">
+                <div>
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Contacts</p>
+                    <h3 class="font-headers font-bold text-3xl text-luxury-black">{{ contact_count }}</h3>
+                </div>
+                <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management Sections -->
+        <div class="space-y-12">
+            <!-- Musique -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+                        </div>
+                        <h2 class="text-lg font-headers font-bold text-luxury-black">Musiques</h2>
+                    </div>
+                    <a href="{% url 'add_music' %}" class="bg-luxury-black text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gold hover:text-black transition-colors">Ajouter</a>
+                </div>
+                <div class="table-wrapper">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Titre</th>
+                                <th class="px-6 py-4">Artiste</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for musique in musiques %}
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-semibold text-luxury-black">{{ musique.titre }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ musique.artiste }}</td>
+                                <td class="px-6 py-4 text-right space-x-3">
+                                    <a href="{% url 'edit_music' musique.id %}" class="text-spiritual-violet font-bold hover:text-spiritual-dark text-xs uppercase">Modifier</a>
+                                    <a href="{% url 'delete_music' musique.id %}" class="text-red-500 font-bold hover:text-red-700 text-xs uppercase" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-500 italic">Aucune musique ajoutée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Actualités -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-spiritual-violet/10 flex items-center justify-center text-spiritual-violet">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+                        </div>
+                        <h2 class="text-lg font-headers font-bold text-luxury-black">Actualités</h2>
+                    </div>
+                    <a href="{% url 'add_actualite' %}" class="bg-luxury-black text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gold hover:text-black transition-colors">Ajouter</a>
+                </div>
+                <div class="table-wrapper">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Titre</th>
+                                <th class="px-6 py-4">Type</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for article in articles %}
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-semibold text-luxury-black">{{ article.titre }}</td>
+                                <td class="px-6 py-4 text-gray-600"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold uppercase">{{ article.type_actualite }}</span></td>
+                                <td class="px-6 py-4 text-right space-x-3">
+                                    <a href="{% url 'edit_actualite' article.id %}" class="text-spiritual-violet font-bold hover:text-spiritual-dark text-xs uppercase">Modifier</a>
+                                    <a href="{% url 'delete_actualite' article.id %}" class="text-red-500 font-bold hover:text-red-700 text-xs uppercase" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-500 italic">Aucune actualité ajoutée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Magazines -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                        </div>
+                        <h2 class="text-lg font-headers font-bold text-luxury-black">Magazines</h2>
+                    </div>
+                    <a href="{% url 'add_magazine' %}" class="bg-luxury-black text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gold hover:text-black transition-colors">Ajouter</a>
+                </div>
+                <div class="table-wrapper">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Titre</th>
+                                <th class="px-6 py-4">Catégorie</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for magazine in magazines %}
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-semibold text-luxury-black">{{ magazine.titre }}</td>
+                                <td class="px-6 py-4 text-gray-600"><span class="bg-gold/10 text-gold px-2 py-1 rounded text-xs font-bold uppercase">{{ magazine.categorie }}</span></td>
+                                <td class="px-6 py-4 text-right space-x-3">
+                                    <a href="{% url 'edit_magazine' magazine.id %}" class="text-spiritual-violet font-bold hover:text-spiritual-dark text-xs uppercase">Modifier</a>
+                                    <a href="{% url 'delete_magazine' magazine.id %}" class="text-red-500 font-bold hover:text-red-700 text-xs uppercase" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-500 italic">Aucun magazine ajouté.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Agenda -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-spiritual-violet/10 flex items-center justify-center text-spiritual-violet">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        </div>
+                        <h2 class="text-lg font-headers font-bold text-luxury-black">Agenda</h2>
+                    </div>
+                    <a href="{% url 'add_agenda' %}" class="bg-luxury-black text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gold hover:text-black transition-colors">Ajouter</a>
+                </div>
+                <div class="table-wrapper">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Titre</th>
+                                <th class="px-6 py-4">Lieu</th>
+                                <th class="px-6 py-4">Date</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for agenda in agendas %}
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-semibold text-luxury-black">{{ agenda.titre }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ agenda.lieu }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ agenda.date_evenement|date:"d M Y" }}</td>
+                                <td class="px-6 py-4 text-right space-x-3">
+                                    <a href="{% url 'edit_agenda' agenda.id %}" class="text-spiritual-violet font-bold hover:text-spiritual-dark text-xs uppercase">Modifier</a>
+                                    <a href="{% url 'delete_agenda' agenda.id %}" class="text-red-500 font-bold hover:text-red-700 text-xs uppercase" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-gray-500 italic">Aucun événement ajouté.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Rubriques -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                        </div>
+                        <h2 class="text-lg font-headers font-bold text-luxury-black">Rubriques</h2>
+                    </div>
+                    <a href="{% url 'add_rubrique' %}" class="bg-luxury-black text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gold hover:text-black transition-colors">Ajouter</a>
+                </div>
+                <div class="table-wrapper">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Titre</th>
+                                <th class="px-6 py-4">Slug</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for rubrique in rubriques %}
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-semibold text-luxury-black">{{ rubrique.title }}</td>
+                                <td class="px-6 py-4 text-gray-600 font-mono text-xs">{{ rubrique.slug }}</td>
+                                <td class="px-6 py-4 text-right space-x-3">
+                                    <a href="{% url 'edit_rubrique' rubrique.id %}" class="text-spiritual-violet font-bold hover:text-spiritual-dark text-xs uppercase">Modifier</a>
+                                    <a href="{% url 'delete_rubrique' rubrique.id %}" class="text-red-500 font-bold hover:text-red-700 text-xs uppercase" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-500 italic">Aucune rubrique ajoutée.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Contacts -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        </div>
+                        <h2 class="text-lg font-headers font-bold text-luxury-black">Messages de Contact</h2>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Nom</th>
+                                <th class="px-6 py-4">Email</th>
+                                <th class="px-6 py-4">Message</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for contact in contacts %}
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-6 py-4 font-semibold text-luxury-black">{{ contact.nom }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ contact.email }}</td>
+                                <td class="px-6 py-4 text-gray-600 italic">"{{ contact.message|truncatechars:100 }}"</td>
+                                <td class="px-6 py-4 text-right">
+                                    <a href="{% url 'delete_contact' contact.id %}" class="text-red-500 font-bold hover:text-red-700 text-xs uppercase" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?')">Supprimer</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-gray-500 italic">Aucun message reçu.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

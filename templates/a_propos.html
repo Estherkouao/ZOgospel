@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}À propos | ZO Gospel{% endblock %}
+
+{% block content %}
+        <section class="py-20 bg-luxury-offwhite">
+            <div class="max-w-7xl mx-auto px-6">
+                <header class="text-center mb-20">
+                    <h2 class="text-5xl font-headers font-bold text-luxury-black mb-4">À Propos</h2>
+                    <p class="text-gray-500 max-w-xl mx-auto italic font-serif text-lg">"L'excellence au service du divin."</p>
+                    <div class="w-24 h-1 bg-gold mx-auto mt-6"></div>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                    <div class="space-y-8">
+                        <section class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+                            <h2 class="text-2xl font-headers font-bold mb-4 text-luxury-black">Vision</h2>
+                            <p class="text-gray-700 leading-relaxed">Nous aspirons à être une plateforme d'excellence spirituelle et artistique, réunissant communautés et talents autour d'un message de foi, d'espoir et d'esthétique.</p>
+                        </section>
+
+                        <section class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+                            <h2 class="text-2xl font-headers font-bold mb-4 text-luxury-black">Mission</h2>
+                            <p class="text-gray-700 leading-relaxed">Promouvoir des initiatives culturelles et spirituelles de qualité, soutenir les artistes chrétiens et offrir des contenus éditoriaux inspirants et bien sourcés.</p>
+                        </section>
+                        
+                        <section class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+                            <h2 class="text-2xl font-headers font-bold mb-4 text-luxury-black">Partenaires</h2>
+                            <p class="text-gray-700 leading-relaxed">Nous collaborons avec des acteurs culturels, labels et associations partageant notre vision. Pour devenir partenaire, contactez-nous.</p>
+                        </section>
+                    </div>
+
+                    <div class="space-y-8">
+                        <section class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+                            <h2 class="text-2xl font-headers font-bold mb-4 text-luxury-black">Manifeste éditorial</h2>
+                            <p class="text-gray-700 leading-relaxed">Nos contenus privilégient la profondeur, l'authenticité et l'excellence formelle. Nous traitons les sujets avec rigueur, bienveillance et un ancrage spirituel clair.</p>
+                        </section>
+
+                        <section class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+                            <h2 class="text-2xl font-headers font-bold mb-4 text-luxury-black">Équipe & direction</h2>
+                            <p class="text-gray-700 leading-relaxed">
+                                <strong class="text-gold">Direction éditoriale :</strong> Nom Directeur<br>
+                                <strong class="text-gold">Rédaction :</strong> Équipe rédactionnelle<br>
+                                <strong class="text-gold">Communication :</strong> Équipe Com
+                            </p>
+                        </section>
+                        
+                        <div class="relative h-64 rounded-2xl overflow-hidden shadow-lg">
+                             <img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover" alt="Team">
+                             <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                 <span class="text-white font-headers font-bold text-xl tracking-widest uppercase">Rejoignez-nous</span>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

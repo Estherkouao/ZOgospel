@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | Rubriques | ZO Gospel{% endblock %}
+
+{% block content %}
+<section class="py-20 bg-luxury-offwhite">
+    <div class="max-w-7xl mx-auto px-6">
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <a href="{% url 'rubriques' %}" class="inline-block mb-6 text-gray-500 hover:text-gold text-sm font-bold uppercase tracking-widest">← Retour aux rubriques</a>
+            <h1 class="text-4xl md:text-5xl font-headers font-bold mb-6" style="color: {{ color }}">{{ title }}</h1>
+            <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">{{ desc }}</p>
+            <div class="w-24 h-1 mx-auto mt-8" style="background-color: {{ color }}"></div>
+        </header>
+
+        <!-- Items Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for item in items %}
+            <article class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 group">
+                <div class="h-56 overflow-hidden relative">
+                    {% if item.obj.image %}
+                    <img src="{{ item.obj.image.url }}" alt="{{ item.obj.titre }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    {% else %}
+                    <div class="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">Pas d'image</div>
+                    {% endif %}
+                    
+                    <div class="absolute top-4 left-4 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest rounded-full" style="background-color: {{ color }}">
+                        {% if item.kind == 'actualite' %}Article{% elif item.kind == 'magazine' %}Magazine{% else %}Agenda{% endif %}
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="text-xs text-gray-400 mb-2">
+                        {% if item.obj.date %}{{ item.obj.date|date:'d M Y' }}
+                        {% elif item.obj.date_publication %}{{ item.obj.date_publication|date:'d M Y' }}
+                        {% elif item.obj.date_evenement %}{{ item.obj.date_evenement|date:'d M Y' }}
+                        {% endif %}
+                    </div>
+                    <h3 class="text-xl font-headers font-bold mb-3 text-luxury-black group-hover:text-gold transition-colors">{{ item.obj.titre }}</h3>
+                    
+                    <div class="mt-4">
+                        {% if item.kind == 'actualite' %}
+                        <a href="{% url 'actualite_detail' item.obj.id %}" class="text-sm font-bold hover:underline" style="color: {{ color }}">Lire l'article</a>
+                        {% elif item.kind == 'agenda' %}
+                        <a href="{% url 'register_agenda' item.obj.id %}" class="text-sm font-bold hover:underline" style="color: {{ color }}">Voir l'événement</a>
+                        {% else %}
+                        <a href="{% url 'magazine_detail' item.obj.id %}" class="text-sm font-bold hover:underline" style="color: {{ color }}">Lire le magazine</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="col-span-full text-center py-12 text-gray-500">
+                <p class="text-lg">Aucun contenu disponible pour le moment dans cette rubrique.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

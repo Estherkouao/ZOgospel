@@ -1,0 +1,157 @@
+{% load static %}
+<!doctype html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Acheter un billet | {{ agenda.titre }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { DEFAULT: '#D4AF37', light: '#F4DF4E', dark: '#AF8F2C' },
+            spiritual: { violet: '#8A2BE2', dark: '#4B0082' },
+            luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+          },
+          fontFamily: { headers: ['Montserrat','sans-serif'], body: ['Poppins','sans-serif'], serif: ['Playfair Display','serif'] }
+        }
+      }
+    }
+  </script>
+  <style> .glass-nav { background: rgba(26,26,26,0.9); backdrop-filter: blur(8px); border-bottom:1px solid rgba(212,175,55,0.12); } </style>
+</head>
+<body class="bg-luxury-offwhite font-body text-luxury-black">
+  <header class="glass-nav fixed top-0 left-0 w-full z-40">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="{% url 'accueil' %}">
+            <img src="{% static 'images/logo_zogospel.png' %}" alt="ZO Gospel" class="h-12 w-auto">
+        </a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="{% url 'agenda' %}" class="bg-white text-luxury-black px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-gray-100">Agenda</a>
+        <a href="{% url 'accueil' %}" class="bg-spiritual-violet text-white px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest">Accueil</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-28 max-w-4xl mx-auto px-6 pb-20">
+    <div class="bg-white rounded-2xl shadow p-6 md:flex overflow-hidden border border-gray-100">
+      <div class="md:w-1/2 relative h-64 md:h-auto bg-gray-100">
+        {% if agenda.image %}
+          <img src="{{ agenda.image.url }}" alt="{{ agenda.titre }}" class="w-full h-full object-cover">
+        {% else %}
+          <div class="w-full h-full flex items-center justify-center text-gray-400">Pas d'image</div>
+        {% endif %}
+        <div class="absolute left-4 top-4 bg-black/60 text-white px-3 py-2 rounded-lg text-center">
+          <div class="text-2xl font-bold">{{ agenda.date_evenement|date:'d' }}</div>
+          <div class="text-xs uppercase">{{ agenda.date_evenement|date:'M' }}</div>
+        </div>
+        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6">
+             <span class="text-gold text-xs font-bold uppercase tracking-widest">Concert</span>
+             <h3 class="text-white font-headers font-bold text-xl">{{ agenda.titre }}</h3>
+        </div>
+      </div>
+
+      <div class="md:w-1/2 p-8">
+        <h2 class="text-2xl font-headers font-bold mb-2 text-luxury-black">Réservation</h2>
+        <p class="text-sm text-gray-500 mb-6 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            {{ agenda.lieu|default:'Lieu à définir' }}
+        </p>
+
+        <form method="post" class="grid grid-cols-1 gap-5">
+          {% csrf_token %}
+          <div>
+            <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Nom Complet</label>
+            <input type="text" name="nom" placeholder="Votre nom" required class="w-full px-4 py-3 bg-luxury-offwhite border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Email</label>
+            <input type="email" name="email" placeholder="Votre email" required class="w-full px-4 py-3 bg-luxury-offwhite border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Téléphone</label>
+            <input type="text" name="phone" placeholder="Votre numéro" class="w-full px-4 py-3 bg-luxury-offwhite border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase text-gray-400 mb-3">Moyen de paiement</label>
+            <div class="grid grid-cols-2 gap-3">
+                <!-- Wave -->
+                <label class="cursor-pointer relative">
+                    <input type="radio" name="payment_method" value="wave" class="peer sr-only" required>
+                    <div class="p-4 rounded-xl border border-gray-200 bg-white hover:border-blue-400 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all flex flex-col items-center justify-center gap-2 h-24 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-[#1dc4ff] flex items-center justify-center text-white font-bold text-xs shadow-sm">W</div>
+                        <span class="text-sm font-bold text-gray-700">Wave</span>
+                    </div>
+                    <div class="absolute top-2 right-2 text-blue-500 opacity-0 peer-checked:opacity-100 transition-opacity">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    </div>
+                </label>
+
+                <!-- Orange Money -->
+                <label class="cursor-pointer relative">
+                    <input type="radio" name="payment_method" value="om" class="peer sr-only">
+                    <div class="p-4 rounded-xl border border-gray-200 bg-white hover:border-orange-400 peer-checked:border-orange-500 peer-checked:bg-orange-50 transition-all flex flex-col items-center justify-center gap-2 h-24 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-[#ff7900] flex items-center justify-center text-white font-bold text-xs shadow-sm">OM</div>
+                        <span class="text-sm font-bold text-gray-700">Orange Money</span>
+                    </div>
+                    <div class="absolute top-2 right-2 text-orange-500 opacity-0 peer-checked:opacity-100 transition-opacity">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    </div>
+                </label>
+
+                <!-- MTN -->
+                <label class="cursor-pointer relative">
+                    <input type="radio" name="payment_method" value="mtn" class="peer sr-only">
+                    <div class="p-4 rounded-xl border border-gray-200 bg-white hover:border-yellow-400 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 transition-all flex flex-col items-center justify-center gap-2 h-24 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-[#ffcc00] flex items-center justify-center text-black font-bold text-xs shadow-sm">MTN</div>
+                        <span class="text-sm font-bold text-gray-700">MTN MoMo</span>
+                    </div>
+                    <div class="absolute top-2 right-2 text-yellow-600 opacity-0 peer-checked:opacity-100 transition-opacity">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    </div>
+                </label>
+
+                <!-- Card -->
+                <label class="cursor-pointer relative">
+                    <input type="radio" name="payment_method" value="card" class="peer sr-only">
+                    <div class="p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-400 peer-checked:border-gray-800 peer-checked:bg-gray-50 transition-all flex flex-col items-center justify-center gap-2 h-24 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        </div>
+                        <span class="text-sm font-bold text-gray-700">Carte Bancaire</span>
+                    </div>
+                    <div class="absolute top-2 right-2 text-gray-800 opacity-0 peer-checked:opacity-100 transition-opacity">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    </div>
+                </label>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full bg-gold hover:bg-gold-light text-luxury-black py-3 rounded-xl font-bold uppercase tracking-widest transition-colors shadow-lg shadow-gold/20">Payer le billet</button>
+            <div class="text-center mt-4">
+                <a href="{% url 'agenda' %}" class="text-xs text-gray-400 hover:text-luxury-black uppercase tracking-widest font-bold">Annuler</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-luxury-black text-luxury-white py-12">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <p class="text-luxury-white/60 text-sm">&copy; 2024 ZO Gospel. Tous droits réservés.</p>
+    </div>
+  </footer>
+</body>
+</html>

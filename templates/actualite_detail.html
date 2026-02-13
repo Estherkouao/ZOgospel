@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ actualite.titre }} | Actualités | ZO Gospel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .article-content p {
+        margin-bottom: 1.5rem;
+        line-height: 1.75;
+    }
+    .article-content h2, .article-content h3, .article-content h4 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .article-content ul {
+        list-style-type: disc;
+        padding-left: 2rem;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="py-20 bg-luxury-offwhite">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-12">
+        
+        <!-- Main Article Content -->
+        <div class="lg:col-span-2">
+            <article class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 md:p-12">
+                <div class="mb-6">
+                    <a href="{% url 'actualites' %}" class="text-gold font-bold text-sm uppercase tracking-widest hover:underline">Actualités</a>
+                    <span class="mx-2 text-gray-400">/</span>
+                    <span class="bg-spiritual-violet text-white text-xs font-bold uppercase px-3 py-1 rounded-full">{{ actualite.type_actualite }}</span>
+                </div>
+                
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-headers font-bold mb-4 text-luxury-black">{{ actualite.titre }}</h1>
+                <p class="text-gray-500 text-sm mb-6">{{ actualite.date|date:'d F Y' }}</p>
+
+                {% if actualite.image %}
+                <div class="mb-8 rounded-2xl overflow-hidden shadow-md">
+                    <img src="{{ actualite.image.url }}" alt="{{ actualite.titre }}" class="w-full h-auto max-h-[500px] object-cover">
+                </div>
+                {% endif %}
+                
+                <div class="article-content text-gray-800 text-lg">
+                    {{ actualite.contenu|linebreaks }}
+                </div>
+
+                <!-- Social Share & Likes -->
+                <div class="mt-10 pt-6 border-t border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm font-bold text-gray-600">Partager:</span>
+                        <a href="#" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gold hover:text-black transition-colors">F</a>
+                        <a href="#" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gold hover:text-black transition-colors">T</a>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="likes-count text-gray-600 font-bold text-lg" data-id="{{ actualite.id }}">{{ actualite.likes }}</span>
+                        <button class="like-btn text-red-400 hover:text-red-600 hover:scale-110 transition-all" data-id="{{ actualite.id }}" aria-label="Aimer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+            {% include 'partials/sidebar.html' %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = btn.dataset.id;
+            const csrftoken = getCookie('csrftoken');
+            const url = `{% url 'like_actualite' 0 %}`.replace('/0/', `/${id}/`);
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            }).then(r => r.json()).then(data => {
+                const el = document.querySelector(`.likes-count[data-id='${id}']`);
+                if (el && data.likes !== undefined) {
+                    el.textContent = data.likes;
+                    btn.classList.add('text-red-600');
+                }
+            }).catch(err => console.error('Like error:', err));
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if edit %}Modifier Magazine{% else %}Ajouter Magazine{% endif %} | Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { DEFAULT: '#D4AF37' },
+                        spiritual: { violet: '#8A2BE2' },
+                        luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+                    },
+                    fontFamily: { headers: ['Montserrat','sans-serif'], body: ['Poppins','sans-serif'], serif: ['Playfair Display','serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-nav { background: rgba(26,26,26,0.9); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(212,175,55,0.12); }
+    </style>
+</head>
+<body class="bg-luxury-offwhite font-body text-luxury-black">
+    <header class="glass-nav fixed top-0 left-0 w-full z-40">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <h1 class="font-headers text-2xl font-bold tracking-tighter text-gold italic">EXCELLENCE</h1>
+                <span class="text-sm text-luxury-white/60">Admin</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="{% url 'admin_dashboard' %}" class="bg-white text-luxury-black px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-gray-100">Tableau de bord</a>
+                <a href="{% url 'admin_logout' %}" class="bg-gold text-luxury-black px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest">Déconnexion</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-28 max-w-4xl mx-auto px-6 pb-20">
+        <div class="bg-white rounded-2xl shadow p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-headers font-bold">{% if edit %}Modifier le magazine{% else %}Ajouter un magazine{% endif %}</h2>
+                <a href="{% url 'admin_dashboard' %}" class="text-sm text-gray-600">Retour</a>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 gap-6">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase mb-2">Titre</label>
+                    <input type="text" name="titre" required value="{% if magazine %}{{ magazine.titre }}{% endif %}" class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase mb-2">Catégorie</label>
+                    <input type="text" name="categorie" required value="{% if magazine %}{{ magazine.categorie }}{% endif %}" class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase mb-2">Image</label>
+                    <input type="file" name="image" accept="image/*" class="w-full">
+                    {% if magazine and magazine.image %}
+                    <div class="mt-3"><img src="{{ magazine.image.url }}" class="w-48 h-32 object-cover rounded-md" alt="preview"></div>
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase mb-2">Description</label>
+                    <textarea name="description" rows="6" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">{% if magazine %}{{ magazine.description }}{% endif %}</textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase mb-2">Fichier PDF</label>
+                    <input type="file" name="pdf_file" accept="application/pdf" class="w-full">
+                    {% if magazine and magazine.pdf_file %}
+                    <div class="mt-3 text-sm">Fichier actuel : <a href="{{ magazine.pdf_file.url }}" target="_blank" class="text-blue-600">{{ magazine.pdf_file.name }}</a></div>
+                    {% endif %}
+                </div>
+                <div>
+                    <button type="submit" class="bg-gold hover:bg-gold-light text-luxury-black font-bold py-3 px-6 rounded-xl">{% if edit %}Modifier le Magazine{% else %}Ajouter le Magazine{% endif %}</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

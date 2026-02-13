@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Admin | ZO Gospel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { DEFAULT: '#D4AF37', light: '#F4DF4E', dark: '#AF8F2C' },
+                        spiritual: { violet: '#8A2BE2', dark: '#4B0082' },
+                        luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+                    },
+                    fontFamily: {
+                        headers: ['Montserrat', 'sans-serif'],
+                        body: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-luxury-black font-body text-luxury-white relative overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+        <img src="{% static 'images/couverture-facebook.png' %}" class="w-full h-full object-cover opacity-30" alt="Background">
+        <div class="absolute inset-0 bg-gradient-to-b from-luxury-black/60 to-luxury-black/90"></div>
+    </div>
+
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
+        <div class="mb-8">
+            <a href="{% url 'accueil' %}">
+                <img src="{% static 'images/logo_zogospel.png' %}" alt="ZO Gospel" class="h-20 w-auto">
+            </a>
+        </div>
+        <div class="w-full max-w-md bg-white/5 backdrop-blur-lg p-10 rounded-3xl border border-white/10">
+            <h2 class="text-3xl font-headers font-bold text-center text-white mb-2">Accès Admin</h2>
+            <p class="text-center text-white/60 mb-8">Connectez-vous pour gérer le contenu.</p>
+            
+            {% if error %}
+                <div class="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg mb-6 text-sm">
+                    Nom d'utilisateur ou mot de passe incorrect.
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <div>
+                    <label for="username" class="block text-luxury-white/60 text-xs font-bold uppercase mb-2">Nom d'utilisateur</label>
+                    <input type="text" name="username" id="username" class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-luxury-white/60 text-xs font-bold uppercase mb-2">Mot de passe</label>
+                    <input type="password" name="password" id="password" class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all" required>
+                </div>
+                <button type="submit" class="w-full bg-gold hover:bg-gold-light text-luxury-black font-bold py-4 rounded-xl transition-all uppercase tracking-widest shadow-lg shadow-gold/20">Connexion</button>
+            </form>
+        </div>
+        <div class="mt-8">
+            <a href="{% url 'accueil' %}" class="text-sm text-white/50 hover:text-gold transition-colors">Retour au site</a>
+        </div>
+    </div>
+</body>
+</html>

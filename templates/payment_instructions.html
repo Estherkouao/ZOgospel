@@ -1,0 +1,98 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Finaliser le Paiement</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { DEFAULT: '#D4AF37' },
+            spiritual: { violet: '#8A2BE2' },
+            luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+          },
+          fontFamily: { headers: ['Montserrat','sans-serif'], body: ['Poppins','sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-luxury-offwhite font-body text-luxury-black">
+  <main class="min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+      
+      <!-- En-tête -->
+      <div class="bg-luxury-black p-6 text-center">
+        <h2 class="text-white font-headers font-bold text-xl">
+            {% if ticket.paid %}Paiement Réussi{% else %}Finalisation de la commande{% endif %}
+        </h2>
+        <p class="text-gold text-sm mt-1">Réf. {{ ticket.reference }}</p>
+      </div>
+      
+      <div class="p-8">
+        <!-- État : PAIEMENT VALIDÉ -->
+        {% if ticket.paid %}
+        <div class="text-center">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Félicitations !</h3>
+            <p class="text-gray-600 mb-8">Votre place pour <strong>{{ ticket.agenda.titre }}</strong> est réservée.</p>
+            
+            <a href="{% url 'ticket_agenda_download' ticket.id %}" class="block w-full bg-spiritual-violet hover:bg-spiritual-dark text-white text-center py-4 rounded-xl font-bold uppercase tracking-widest transition-all shadow-lg shadow-spiritual-violet/30 mb-4">
+                Télécharger mon billet
+            </a>
+            <a href="{% url 'agenda' %}" class="text-sm text-gray-500 hover:text-luxury-black underline">Retour à l'agenda</a>
+        </div>
+
+        <!-- État : EN ATTENTE DE PAIEMENT -->
+        {% else %}
+        <div class="mb-8 text-center">
+            <p class="text-gray-500 text-sm uppercase tracking-widest mb-2">Montant à payer</p>
+            <p class="text-4xl font-bold text-luxury-black">5 000 FCFA</p>
+        </div>
+
+        {% if ticket.payment_method in 'momo,wave,om,mtn' %}
+            <div class="bg-gray-50 rounded-xl p-6 mb-6 border border-gray-100">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-xl font-bold text-gray-700">
+                        {% if ticket.payment_method == 'wave' %}W{% elif ticket.payment_method == 'om' %}OM{% elif ticket.payment_method == 'mtn' %}M{% else %}M{% endif %}
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">Paiement {{ ticket.payment_method|upper }}</h3>
+                        <p class="text-xs text-gray-500">Suivez les instructions sur votre mobile</p>
+                    </div>
+                </div>
+                
+                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700 mb-4">
+                    <li>Composez le code de transfert habituel.</li>
+                    <li>Envoyez au marchand : <strong class="text-luxury-black">123456</strong></li>
+                    <li>Montant exact : <strong>5 000 FCFA</strong></li>
+                    <li>Validez avec votre code secret.</li>
+                </ol>
+            </div>
+        {% else %}
+            <div class="bg-gray-50 rounded-xl p-6 mb-6 border border-gray-100 text-center">
+                <p class="text-gray-600">Cliquez ci-dessous pour accéder au terminal de paiement sécurisé.</p>
+            </div>
+        {% endif %}
+
+        <div class="space-y-3">
+            <a href="{% url 'initiate_payment' ticket.id %}" class="block w-full bg-gold hover:bg-gold-light text-luxury-black text-center py-4 rounded-xl font-bold uppercase tracking-widest transition-all shadow-lg shadow-gold/20">
+                Payer maintenant (Wave, OM, MTN, Carte)
+            </a>
+            <a href="{% url 'agenda' %}" class="block w-full text-center py-3 text-sm text-gray-400 hover:text-gray-600">
+                Annuler la transaction
+            </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</body>
+</html>

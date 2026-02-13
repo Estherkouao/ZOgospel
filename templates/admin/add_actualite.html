@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Article | Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&family=Roboto:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { DEFAULT: '#D4AF37', light: '#F4DF4E', dark: '#AF8F2C' },
+                        spiritual: { violet: '#8A2BE2', dark: '#4B0082' },
+                        luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+                    },
+                    fontFamily: { headers: ['Montserrat','Bebas Neue','sans-serif'], body: ['Roboto','Open Sans','sans-serif'], verset: ['Playfair Display','serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-luxury-offwhite font-body text-luxury-black">
+    <header class="bg-luxury-black text-luxury-white py-6">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+            <h1 class="font-headers text-2xl font-bold tracking-tighter text-gold italic">Ajouter Article</h1>
+            <a href="{% url 'admin_dashboard' %}" class="bg-gold text-luxury-black px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest">Retour</a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <!-- Verset / Citation -->
+        <blockquote class="mb-6 border-l-4 border-gold pl-6 italic font-verset text-gray-700 bg-white/60 p-4 rounded-md">
+            <p>"Ta parole est une lampe à mes pieds, et une lumière sur mon sentier." — Psaume 119:105</p>
+        </blockquote>
+        <form method="post" enctype="multipart/form-data" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Titre</label>
+                    <input type="text" name="titre" value="{% if actualite %}{{ actualite.titre }}{% endif %}" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Type d'actualité</label>
+                    <input type="text" name="type_actualite" value="{% if actualite %}{{ actualite.type_actualite }}{% endif %}" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Image</label>
+                    <input type="file" name="image" accept="image/*" class="w-full">
+                    {% if actualite and actualite.image %}
+                    <div class="mt-3"><img src="{{ actualite.image.url }}" class="w-48 h-32 object-cover rounded-md" alt="preview"></div>
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Contenu</label>
+                    <textarea name="contenu" rows="6" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">{% if actualite %}{{ actualite.contenu }}{% endif %}</textarea>
+                </div>
+                <div>
+                    <button type="submit" class="bg-gold hover:bg-gold-light text-luxury-black font-bold py-3 px-6 rounded-xl">{% if edit %}Modifier l'Article{% else %}Ajouter l'Article{% endif %}</button>
+                </div>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

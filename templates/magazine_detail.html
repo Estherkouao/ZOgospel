@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ magazine.titre }} | Magazine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-luxury-offwhite text-luxury-black font-body">
+  <main class="max-w-4xl mx-auto p-6">
+    <article class="bg-white rounded-2xl shadow p-6">
+      <h1 class="text-3xl font-headers font-bold mb-4">{{ magazine.titre }}</h1>
+      <div class="text-sm text-gray-500 mb-4">{{ magazine.categorie }} • {{ magazine.date_publication|date:'d F Y' }}</div>
+      {% if magazine.image %}
+        <div class="mb-6"><img src="{{ magazine.image.url }}" alt="{{ magazine.titre }}" class="w-full h-64 object-cover rounded-lg"></div>
+      {% endif %}
+      <div class="prose max-w-none text-gray-700">
+        {{ magazine.description|linebreaks }}
+      </div>
+    </article>
+  </main>
+</body>
+</html>

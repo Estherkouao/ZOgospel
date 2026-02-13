@@ -1,0 +1,89 @@
+{% load static %}
+<!doctype html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>S'inscrire à l'événement | {{ agenda.titre }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { DEFAULT: '#D4AF37' },
+            spiritual: { violet: '#8A2BE2' },
+            luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+          },
+          fontFamily: { headers: ['Montserrat','sans-serif'], body: ['Poppins','sans-serif'], serif: ['Playfair Display','serif'] }
+        }
+      }
+    }
+  </script>
+  <style> .glass-nav { background: rgba(26,26,26,0.9); backdrop-filter: blur(8px); border-bottom:1px solid rgba(212,175,55,0.12); } </style>
+</head>
+<body class="bg-luxury-offwhite font-body text-luxury-black">
+  <header class="glass-nav fixed top-0 left-0 w-full z-40">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="{% url 'accueil' %}">
+            <img src="{% static 'images/logo_zogospel.png' %}" alt="ZO Gospel" class="h-12 w-auto">
+        </a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="{% url 'agenda' %}" class="bg-white text-luxury-black px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-gray-100">Agenda</a>
+        <a href="{% url 'accueil' %}" class="bg-spiritual-violet text-white px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest">Accueil</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-28 max-w-4xl mx-auto px-6 pb-20">
+    <div class="bg-white rounded-2xl shadow p-6 md:flex overflow-hidden">
+      <div class="md:w-1/2 relative h-64 md:h-auto bg-gray-100">
+        {% if agenda.image %}
+          <img src="{{ agenda.image.url }}" alt="{{ agenda.titre }}" class="w-full h-full object-cover">
+        {% else %}
+          <div class="w-full h-full flex items-center justify-center text-gray-400">Pas d'image</div>
+        {% endif %}
+        <div class="absolute left-4 top-4 bg-black/60 text-white px-3 py-2 rounded-lg text-center">
+          <div class="text-2xl font-bold">{{ agenda.date_evenement|date:'d' }}</div>
+          <div class="text-xs uppercase">{{ agenda.date_evenement|date:'M' }}</div>
+        </div>
+      </div>
+
+      <div class="md:w-1/2 p-6">
+        <h2 class="text-2xl font-headers font-bold mb-1">{{ agenda.titre }}</h2>
+        <p class="text-sm text-gray-500 mb-4">{{ agenda.type_evenement|title }} • {{ agenda.lieu|default:'Lieu à définir' }} • {{ agenda.date_evenement|date:'d F Y' }}</p>
+
+        <form method="post" class="grid grid-cols-1 gap-4">
+          {% csrf_token %}
+          <label class="text-sm font-medium">Nom</label>
+          <input type="text" name="nom" placeholder="Votre nom" required class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-spiritual-violet">
+
+          <label class="text-sm font-medium">Email</label>
+          <input type="email" name="email" placeholder="Votre email" required class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-spiritual-violet">
+
+          <label class="text-sm font-medium">Téléphone (optionnel)</label>
+          <input type="text" name="phone" placeholder="Téléphone" class="w-full px-4 py-3 border rounded-xl">
+
+          <div class="flex items-center gap-4 mt-2">
+            <button type="submit" class="bg-gold text-luxury-black px-6 py-3 rounded-full font-bold">S'inscrire et recevoir le ticket</button>
+            <a href="{% url 'agenda' %}" class="text-sm text-gray-600">Retour</a>
+          </div>
+        </form>
+
+        <p class="text-xs text-gray-500 mt-4">Vous recevrez votre billet téléchargeable immédiatement après l'inscription.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-luxury-black text-luxury-white py-12">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <p class="text-luxury-white/60">&copy; 2024 ZO Gospel. Tous droits réservés.</p>
+    </div>
+  </footer>
+</body>
+</html>

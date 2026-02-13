@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Événement | Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&family=Roboto:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { DEFAULT: '#D4AF37', light: '#F4DF4E', dark: '#AF8F2C' },
+                        spiritual: { violet: '#8A2BE2', dark: '#4B0082' },
+                        luxury: { black: '#1A1A1A', white: '#FFFFFF', offwhite: '#F8F8F8' }
+                    },
+                    fontFamily: { headers: ['Montserrat','Bebas Neue','sans-serif'], body: ['Roboto','Open Sans','sans-serif'], verset: ['Playfair Display','serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-luxury-offwhite font-body text-luxury-black">
+    <header class="bg-luxury-black text-luxury-white py-6">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+            <h1 class="font-headers text-2xl font-bold tracking-tighter text-gold italic">Ajouter Événement</h1>
+            <a href="{% url 'admin_dashboard' %}" class="bg-gold text-luxury-black px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-widest">Retour</a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <!-- Verset / Citation -->
+        <blockquote class="mb-6 border-l-4 border-gold pl-6 italic font-verset text-gray-700 bg-white/60 p-4 rounded-md">
+            <p>"Entrez dans ses portes avec des actions de grâces, dans ses parvis avec des louanges." — Psaume 100:4</p>
+        </blockquote>
+        <form method="post" enctype="multipart/form-data" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Titre</label>
+                    <input type="text" name="titre" value="{% if agenda %}{{ agenda.titre }}{% endif %}" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Lieu</label>
+                    <input type="text" name="lieu" value="{% if agenda %}{{ agenda.lieu }}{% endif %}" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Date</label>
+                    <input type="date" name="date_evenement" value="{% if agenda %}{{ agenda.date_evenement|date:'Y-m-d' }}{% endif %}" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Description</label>
+                    <textarea name="description" rows="6" required class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">{% if agenda %}{{ agenda.description }}{% endif %}</textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Type d'événement</label>
+                    <select name="type_evenement" class="w-full bg-luxury-offwhite border border-gray-100 rounded-xl px-4 py-3">
+                        <option value="concert" {% if agenda and agenda.type_evenement == 'concert' %}selected{% endif %}>Concert</option>
+                        <option value="conference" {% if agenda and agenda.type_evenement == 'conference' %}selected{% endif %}>Conférence</option>
+                        <option value="showcase" {% if agenda and agenda.type_evenement == 'showcase' %}selected{% endif %}>Showcase</option>
+                        <option value="other" {% if agenda and agenda.type_evenement == 'other' %}selected{% endif %}>Autre</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs font-bold uppercase mb-2">Image de l'événement</label>
+                    <input type="file" name="image" accept="image/*" class="w-full">
+                    {% if agenda and agenda.image %}
+                    <div class="mt-3"><img src="{{ agenda.image.url }}" class="w-48 h-32 object-cover rounded-md" alt="preview"></div>
+                    {% endif %}
+                </div>
+                <div>
+                    <button type="submit" class="bg-gold hover:bg-gold-light text-luxury-black font-bold py-3 px-6 rounded-xl">{% if edit %}Modifier l'Événement{% else %}Ajouter l'Événement{% endif %}</button>
+                </div>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
